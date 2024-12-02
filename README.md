@@ -1,1 +1,1 @@
-# CS361-Project
+# CS-361-Meal-Planning-App
