@@ -5,8 +5,10 @@
   "main": "app.mjs",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "connect-mongodb-session": "^5.0.0",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "mongo": "^0.1.0",
     "mongoose": "^8.8.0",
     "node": "^22.11.0",

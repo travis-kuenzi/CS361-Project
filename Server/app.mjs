@@ -1,4 +1,6 @@
 import express from 'express';
+import session from 'express-session';
+import connectMongoDBSession from 'connect-mongodb-session';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import mongoose from 'mongoose';
@@ -6,6 +8,9 @@ import {default as credentials} from "./dbCredentials.mjs";
 
 // Create an express object
 const app = express();
+
+
+const MongoDBSession = connectMongoDBSession(session);
 
 // use json data for app.use methods
 app.use(express.json());
@@ -24,8 +29,31 @@ app.set('view engine', 'ejs');
 
 // connect to database
 const connection_string = credentials.connection_string;
-mongoose.connect(connection_string, {}).catch(err => console.log('Error connecting to MongoDB:', err));
+mongoose
+    .connect(connection_string, {})
+    .then((res) => { console.log("MongoDB Connected"); })
+    .catch(err => console.log('Error connecting to MongoDB:', err));
 
+    
+const store = new MongoDBSession({
+    uri: connection_string,
+    collection: 'mealPlanAppSessions',
+})
+
+app.use(session({
+    secret: 'key that will sign cookie saved to browser',
+    resave: false, // don't create a new session with every request
+    saveUninitialized: false, // don't save session if it has not been modified
+    store: store,
+}))
+
+// const isAuth = (req, res, next) => {
+//     if(req.session.isAuth) {
+//         next()
+//     } else {
+//         res.redirect('/login');
+//     }
+// }
 
 import { default as userRouter } from "./routes/users.mjs";
 app.use('/', userRouter);
