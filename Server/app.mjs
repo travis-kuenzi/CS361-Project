@@ -47,19 +47,16 @@ app.use(session({
     store: store,
 }))
 
-// const isAuth = (req, res, next) => {
-//     if(req.session.isAuth) {
-//         next()
-//     } else {
-//         res.redirect('/login');
-//     }
-// }
 
 import { default as userRouter } from "./routes/users.mjs";
 app.use('/', userRouter);
 
 import { default as recipeRouter } from "./routes/recipes.mjs";
 app.use("/recipes", recipeRouter);
+
+import { default as mealPlanRouter } from "./routes/mealPlans.mjs";
+app.use("/mealPlans", mealPlanRouter);
+
 
 
 // start the app

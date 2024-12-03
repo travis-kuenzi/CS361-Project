@@ -1,7 +1,4 @@
-import {default as User} from "../models/user.mjs";
-import {default as mongoose} from "mongoose";
 import session from 'express';
-import bcrypt from 'bcrypt';
 
 
 async function loginForm(req, res, next) {
