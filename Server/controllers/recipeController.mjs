@@ -11,7 +11,7 @@ async function recipeById(req, res, next) {
 
     const recipeId = req.params.id;
 
-    const url = `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/informationBulk?ids=${recipeId}`;
+    const url = `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeId}/information`;
     const options = {
         method: 'GET',
         headers: {
@@ -28,8 +28,7 @@ async function recipeById(req, res, next) {
             throw response.status + " " + response.statusText;
 
         
-        const recipeArray = await response.json();
-        let recipe = recipeArray[0];
+        const recipe = await response.json();
 
         res.render('singleRecipe.ejs', { recipe: recipe });
  

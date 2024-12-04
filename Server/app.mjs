@@ -47,6 +47,19 @@ app.use(session({
     store: store,
 }))
 
+// Middleware to set global variables for EJS
+app.use((req, res, next) => {
+    // Simulating userID; in a real app, get this from session/authentication
+    res.locals.userID = req.session?.userID || 'defaultUserID';
+
+    // Store today's date in res.locals.dateToday
+    const today = new Date();
+    res.locals.dateToday = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+
+    next(); // Move to the next middleware or route handler
+});
+
+
 
 import { default as userRouter } from "./routes/users.mjs";
 app.use('/', userRouter);
