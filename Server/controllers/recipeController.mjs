@@ -1,9 +1,10 @@
 
 async function browseRecipes(req, res, next) {
     try {
-        res.render("browseRecipes.ejs");
-    } catch (err) {
-        console.error('Something went wrong when trying to display home:', err);
+        console.log("\nRunning browseRecipes in the recipeController.\n");
+        res.render('browseRecipes'); // Render the page for authenticated users
+    } catch {
+        console.error('Something went wrong when trying to display home:');
     }
 };
 

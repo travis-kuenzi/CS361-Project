@@ -45,6 +45,11 @@ app.use(session({
     resave: false, // don't create a new session with every request
     saveUninitialized: false, // don't save session if it has not been modified
     store: store,
+    cookie: {
+        httpOnly: true,
+        secure: false, // Set to true if using HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
 }))
 
 // Middleware to set global variables for EJS
@@ -69,6 +74,7 @@ app.use("/recipes", recipeRouter);
 
 import { default as mealPlanRouter } from "./routes/mealPlans.mjs";
 app.use("/mealPlans", mealPlanRouter);
+
 
 
 

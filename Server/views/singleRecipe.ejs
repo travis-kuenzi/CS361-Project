@@ -4,40 +4,52 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous"></head>
 
-    <h1><%- recipe.title %></h1>
+    <body>
+        <div class="container">
+            <h1>
+                <%- recipe.title %> 
+                <form method="GET" action="/mealPlans/addMealForm/<%- recipe.id %>" style="display: inline;">
+                    <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;">Add to Meal Plan</button>
+                </form>
+                
+            </h1>
+              
 
-    <p><%- recipe.summary %></p>
-    <p></p>
-
-    <img src="<%= recipe.image %>" alt="<%= recipe.title %>" height="400 em">
-
-    <p></p>
-    <% if (recipe.preparationMinutes) { %>
-        <p>Preparation Time: <%- recipe.preparationMinutes %> minutes</p>
-    <% } %>
-    <% if (recipe.cookingMinutes) { %>
-        <p>Cook Time: <%- recipe.cookingMinutes %> minutes</p>
-    <% } %>
-    <% if (recipe.readyInMinutes) { %>
-        <p>Total Time: <%- recipe.readyInMinutes %> minutes</p>
-    <% } %>
-
-
-    <h2>Ingredients: </h2>
-    <ul>
-        <% for (const ingredient of recipe.extendedIngredients) { %>
-            <li><%- ingredient.amount %> <%- ingredient.unit %> <%- ingredient.name %></li>
-        <% } %>
-    </ul>
-
-    <h2>Instructions: </h2>
-    <ol>
-        <% for (const instruction of recipe.analyzedInstructions) { %>
-                <% for (const step of instruction.steps) { %>
-                    <li><%- step.step %></li>
+            <p><%- recipe.summary %></p>
+            <p></p>
+        
+            <img src="<%= recipe.image %>" alt="<%= recipe.title %>" height="400 em">
+        
+            <p></p>
+            <% if (recipe.preparationMinutes) { %>
+                <p>Preparation Time: <%- recipe.preparationMinutes %> minutes</p>
+            <% } %>
+            <% if (recipe.cookingMinutes) { %>
+                <p>Cook Time: <%- recipe.cookingMinutes %> minutes</p>
+            <% } %>
+            <% if (recipe.readyInMinutes) { %>
+                <p>Total Time: <%- recipe.readyInMinutes %> minutes</p>
+            <% } %>
+        
+        
+            <h2>Ingredients: </h2>
+            <ul>
+                <% for (const ingredient of recipe.extendedIngredients) { %>
+                    <li><%- ingredient.amount %> <%- ingredient.unit %> <%- ingredient.name %></li>
                 <% } %>
-        <% } %>
-    </ol>
+            </ul>
+        
+            <h2>Instructions: </h2>
+            <ol>
+                <% for (const instruction of recipe.analyzedInstructions) { %>
+                        <% for (const step of instruction.steps) { %>
+                            <li><%- step.step %></li>
+                        <% } %>
+                <% } %>
+            </ol>
+        </div>
+    </body>
+    
 
 </main>
 

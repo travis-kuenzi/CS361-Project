@@ -35,6 +35,7 @@ async function viewMealPlan(req, res, next) {
 
     // validate user ID
     if (!mongoose.Types.ObjectId.isValid(userID)) {
+        console.log(`Invalid user ID: ${ userID }`);
         return res.status(400).json({ error: "Invalid userID format" });
     }
     console.log("Controller received:", { userID, date });  // DEBUGGING
@@ -97,5 +98,51 @@ async function viewMealPlan(req, res, next) {
     }
 };
 
+async function addMealForm(req, res, next) {
+    const { recipeID } = req.params;
 
-export { viewMealPlan }
+    res.render("addMealForm", { recipeID });
+}
+
+async function addMeal(req, res, next) {
+    const { date, userID, day, recipeID } = req.body;
+
+    const mealData = {
+        data: {
+            date,
+            userID,
+            day,
+            recipe: recipeID
+        }
+    }
+
+    const url = 'http://localhost:3002/updateMealPlan';
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // what is this???
+        },
+        body: JSON.stringify(mealData) // convert the JavaScript object to a JSON string
+    };
+
+
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        console.log(`Message from microservice: ${ data.message }`);
+
+        res.redirect(`viewMealPlan/${userID}/${date}`)
+    } catch (error) {
+        console.error('Error making the request:', error);
+        res.redirect(`/recipes/${recipeID}`)
+    }
+}
+
+
+export { viewMealPlan, addMealForm, addMeal }

@@ -16,16 +16,13 @@
         .navbar-custom .nav-link:hover {
             color: #f0f0f0 !important; /* Lighter color on hover */
         }
-
-
-
   </style>
 </head>
 
 
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-        <a class="navbar-brand text-white fw-bold" href="#">MyMealsApp</a>
+        <a class="navbar-brand text-white fw-bold" href="#">MyMealsApp</a> <%- userID %>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -36,7 +33,7 @@
                 </li>
                 <li class="nav-item">
                     <!--Need to adjust so that weekOf and userID are dynamically implemented-->
-                    <a class="nav-link" href="/mealPlans/<%= userID %>/<%= dateToday %>">Meal Plan <%= dateToday %></a>
+                    <a class="nav-link" href="/mealPlans/viewMealPlan/<%= userID %>/<%= dateToday %>">   Meal Plan <%= dateToday %></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/userInformation">User Profile</a>
