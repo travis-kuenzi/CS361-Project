@@ -1,25 +1,21 @@
 console.log("Script is running");
 
-
 let searchBtn = document.querySelector("#searchBtn1");
 searchBtn.addEventListener("click", search);
 let searchBtn2 = document.querySelector("#searchBtn2");
 searchBtn2.addEventListener("click", getRandom);
-
 
 function delay(ms)
 {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function getRandom() 
-{
+async function getRandom() {
     const recipesDiv = document.querySelector('#recipes');
     // clear the recipes div
     recipesDiv.replaceChildren([]);
 
-
-    // connection to the api
+    // connection to the API
     const url = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?tags=main%20course&number=2';
     const options = {
         method: 'GET',
@@ -38,10 +34,6 @@ async function getRandom()
         if (response.status != 200)
             throw response.status + " " + response.statusText;
 
-        // print the response message
-        console.log(response);
-
-
         let recipesArray = await response.json();
         console.log(recipesArray);
 
@@ -56,8 +48,7 @@ async function getRandom()
     }
 }
 
-async function search() 
-{
+async function search() {
     const recipesDiv = document.querySelector('#recipes');
     // clear the recipes div
     recipesDiv.replaceChildren([]);
@@ -65,7 +56,7 @@ async function search()
     const input = document.querySelector('#inputTextbox');
     const recipe = input.value;
 
-    // connection to the api
+    // connection to the API
     const url = `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?query=${recipe}&type=main%20course&instructionsRequired=true&fillIngredients=false&addRecipeInformation=false&addRecipeInstructions=false&addRecipeNutrition=false&ignorePantry=true&sort=max-used-ingredients&offset=0&number=2`;
     const options = {
         method: 'GET',
@@ -84,10 +75,6 @@ async function search()
         if (response.status != 200)
             throw response.status + " " + response.statusText;
 
-        // print the response message
-        console.log(response);
-
-
         let recipesArray = await response.json();
         console.log(recipesArray);
 
@@ -102,12 +89,11 @@ async function search()
     }
 }
 
-
 function createCard(recipeObj) {
     // Element that contains the card and insert in layout
     let container = createElement('div', 'col-md-3');
 
-    let card = createElement('div', 'card h-200 d-flex justify-content-center align-items-center');
+    let card = createElement('div', 'recipe-card card h-100 d-flex justify-content-center align-items-center');
     container.appendChild(card);
 
     let recipeId = recipeObj.id;
@@ -145,9 +131,6 @@ function createCard(recipeObj) {
 
     return container;
 }
-
-
-
 
 function createElement(type, classes, data = null) {
     let element = document.createElement(type);

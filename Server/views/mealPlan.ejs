@@ -4,59 +4,156 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
           crossorigin="anonymous">
+    <style>
+        /* General Styling */
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #07396f; /* Match navbar theme */
+        }
+
+        /* Table Styling */
+        .meal-plan-table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .meal-plan-table th, .meal-plan-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .meal-plan-table th {
+            background-color: #07396f;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .meal-plan-table td {
+            vertical-align: top;
+        }
+
+        /* Card Styling */
+        .meal-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f8ff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .meal-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 50%;
+        }
+
+        .meal-card h5 {
+            font-size: 1em;
+            color: #07396f;
+        }
+
+        /* Shopping List Styling */
+        .shopping-list {
+            width: 90%;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shopping-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .shopping-list li {
+            font-size: 1em;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .shopping-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 
-<h1>Meal plan:</h1>
+<body>
+    <h1>Meal Plan </h1>
+    <h2> Today is: <%- dayOfWeek %> </h2>
 
-<style>
-    table {
-        width: 90%;
-        border-collapse: collapse;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    <table class="meal-plan-table">
+        <tr>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+        </tr>
+        <tr>
+            <% if (mealPlan) { %>
+                <% Object.keys(mealPlan).forEach(function(day) { %>
+                    <td>
+                        <% if (mealPlan[day]) { %>
+                            <a href="/recipes/<%= mealPlan[day].id %>" class="text-decoration-none">
+                                <div class="meal-card">
+                                    <img src="<%= mealPlan[day].imageUri %>" alt="<%= mealPlan[day].title %>">
+                                    <h5><%= mealPlan[day].title %></h5>
+                                    <p>Servings: <%= mealPlan[day].servings %></p>
+                                    <p>Ready in: <%= mealPlan[day].readyInMinutes %> minutes</p>
+                                </div>
+                            </a>
+                        <% } else { %>
+                            <p>No meals for this day. Browse recipes to add.</p>
+                        <% } %>
+                    </td>
+                <% }); %>
+            <% } else { %>
+                <td colspan="7">No meal plan available for this week.</td>
+            <% } %>
+        </tr>
+    </table>
 
-    th, td {
-        padding: 10px;
-        text-align: center;
-        border: 1px solid #ddd;
-    }
-
-    h1 {
-        margin-left: 10%;
-    }
-</style>
-
-<table>
-    <tr>
-        <th>Sunday</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-    </tr>
-    <tr>
-        <% if (mealPlan) { %>
-            <% Object.keys(mealPlan).forEach(function(day) { %>
-                <td>
-                    <% if (mealPlan[day]) { %>
-                        <a href="/recipes/<%= mealPlan[day].id %>">
-                            <div>
-                                <h5><%= mealPlan[day].title %></h5>
-                                <img src="<%= mealPlan[day].imageUri %>" alt="<%= mealPlan[day].title %>" style="width: 100px; height: 100px; object-fit: cover;">
-                                <p>Servings: <%= mealPlan[day].servings %></p>
-                                <p>Ready in: <%= mealPlan[day].readyInMinutes %> minutes</p>
-                            </div>
-                        </a>
-                    <% } else { %>
-                        <p>No meals for this day, go to Home to browse and add recipes.</p>
-                    <% } %>
-                </td>
-            <% }); %>
-        <% } else { %>
-            <td colspan="7">No meal plan available for this week.</td>
-        <% } %>
-    </tr>
-</table>
+    <div class="shopping-list">
+        <h2>Shopping List</h2>
+        <ul>
+            <% if (shoppingList) { %>
+                <% for (const ingredientKey in shoppingList) { %>
+                    <li>
+                        <%= shoppingList[ingredientKey].amount %> 
+                        <%= shoppingList[ingredientKey].unit %> 
+                        <%= shoppingList[ingredientKey].name %>
+                    </li>
+                <% } %>
+            <% } else { %>
+                <p>No ingredients available!</p>
+            <% } %>
+        </ul>
+    </div>
+</body>

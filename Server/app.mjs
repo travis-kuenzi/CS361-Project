@@ -61,9 +61,11 @@ app.use((req, res, next) => {
     const today = new Date();
     res.locals.dateToday = today.toISOString().split('T')[0]; // YYYY-MM-DD format
 
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    res.locals.dayOfWeek = days[today.getDay()];
+
     next(); // Move to the next middleware or route handler
 });
-
 
 
 import { default as userRouter } from "./routes/users.mjs";

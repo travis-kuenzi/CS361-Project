@@ -1,4 +1,4 @@
-<%- include("super-common-header.ejs")%>
+<%- include("super-common-header.ejs") %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,13 +11,40 @@
             crossorigin="anonymous">
 
         <style>
-            .card {
-                background-color: lightgray;
+            .favorite-card, .recipe-card {
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                padding: 15px;
+                border-radius: 10px;
+                transition: transform 0.3s ease-in-out;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
             }
 
-            img {
-                width: 50%;
-                height: auto;
+            .favorite-card:hover, .recipe-card:hover {
+                transform: scale(1.05);
+            }
+
+            .recipe-card img {
+                object-fit: cover;
+                max-width: 100%;
+                height: 200px;
+                border-radius: 5px;
+            }
+
+            .recipe-card .card-body {
+                padding: 10px;
+                flex-grow: 1;
+            }
+
+            .recipe-card .card-body h5 {
+                font-size: 1.1rem;
+                font-weight: bold;
+            }
+
+            .recipe-card .card-body p {
+                font-size: 0.9rem;
             }
 
             #controlSection {
@@ -28,12 +55,18 @@
                 max-width: 400px;
                 margin: 0 auto;
             }
+
+            .section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+            }
         </style>
     </head>
 
     <body class="text-center">
         <main class="container">
-            
             <h1 class="text-center">Recipes</h1>
     
             <div id="controlSection">
@@ -56,7 +89,7 @@
                 <div>To learn more about a recipe, click on the recipe card.</div>
             </div>
 
-            <div id="recipes" class="section row g-2 align-items-stretch"></div>
+            <div id="recipes" class="section"></div>
         </main>
 
         <script>console.log("Inline script is running");</script>

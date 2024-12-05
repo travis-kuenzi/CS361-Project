@@ -60,6 +60,7 @@ async function viewMealPlan(req, res, next) {
 
         // Initialize an object to hold recipes for each day
         const daysWithRecipes = {};
+        const recipeList = [];
         const days = data.mealPlan.days;
 
         // Loop through the days and replace recipe IDs with recipe details
@@ -69,17 +70,28 @@ async function viewMealPlan(req, res, next) {
                 // If recipeId exists, fetch the full recipe details
                 try {
                     const recipe = await recipeById(recipeId);
-                    const { id, image, title, servings, readyInMinutes } = recipe;
+                    const { id, image, title, servings, readyInMinutes, extendedIngredients } = recipe;
+
+                    const ingredients = extendedIngredients.map(ingredient => ({
+                        name: ingredient.name,
+                        amount: ingredient.measures.us.amount,
+                        unit: ingredient.measures.us.unitShort
+                    }));
 
                     const simplifiedRecipe = {
                         id,
                         imageUri: image,  // Renaming 'image' to 'imageUri' for consistency
                         title,
                         servings,
-                        readyInMinutes
+                        readyInMinutes,
+                        ingredients: extendedIngredients
                     };
 
                     daysWithRecipes[day] = simplifiedRecipe;
+                    recipeList.push({
+                        title,
+                        ingredients
+                    });
                 } catch (error) {
                     console.error(`Error fetching recipe for ${day}:`, error);
                     daysWithRecipes[day] = null; // Set to null if recipe fetch fails
@@ -91,9 +103,35 @@ async function viewMealPlan(req, res, next) {
 
         console.log(daysWithRecipes);
 
-        return res.render('mealPlan', { mealPlan: daysWithRecipes });
+        console.log("Payload to microservice:", JSON.stringify({ recipes: recipeList }, null, 2));
+        
+
+        // make request to the ingredients microservice to get the shopping list
+        const shoppingListResponse = await fetch('http://localhost:3010/generate-shopping-list', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ recipes: recipeList })
+        });
+
+        let shoppingList = {};
+        if (shoppingListResponse.ok) {
+            const shoppingListData = await shoppingListResponse.json();
+            shoppingList = shoppingListData.shoppingList;
+            console.log("Shopping list:\n");
+            console.log(shoppingList);
+        } else {
+            console.error("Failed to fetch shopping list from microservice.");
+        }
+
+        return res.render('mealPlan', {
+            mealPlan: daysWithRecipes,
+            shoppingList
+        });
         
     } catch {
+        console.error("Error in viewMealPlan!");
         return res.status(500).json({ error: "Internal server error. Please try again later." });
     }
 };

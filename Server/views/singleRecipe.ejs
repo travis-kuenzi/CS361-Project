@@ -11,7 +11,15 @@
                 <form method="GET" action="/mealPlans/addMealForm/<%- recipe.id %>" style="display: inline;">
                     <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;">Add to Meal Plan</button>
                 </form>
-                
+                <form method="POST" action="/recipes/addFavorite" style="display: inline;">
+                    <input type="hidden" name="userID" value="<%- userID %>">
+                    <input type="hidden" name="recipeID" value="<%- recipe.id %>">
+                    <input type="hidden" name="recipeImage" value="<%- recipe.image %>">
+                    <input type="hidden" name="recipeTitle" value="<%- recipe.title %>">
+                    <input type="hidden" name="recipeServings" value="<%- recipe.servings %>">
+                    <input type="hidden" name="recipeReadyInMinutes" value="<%- recipe.readyInMinutes %>">
+                    <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;">Add to Favorites</button>
+                </form>
             </h1>
               
 
@@ -31,13 +39,22 @@
                 <p>Total Time: <%- recipe.readyInMinutes %> minutes</p>
             <% } %>
         
-        
             <h2>Ingredients: </h2>
-            <ul>
-                <% for (const ingredient of recipe.extendedIngredients) { %>
-                    <li><%- ingredient.amount %> <%- ingredient.unit %> <%- ingredient.name %></li>
-                <% } %>
-            </ul>
+            <h4>Servings: 
+                <div>
+                    <input type="number" name="desiredServings" id="desired" value="<%- recipe.servings %>" min="1">
+                    <input type="hidden" name="currentServings" id="current" value="<%- recipe.servings %>">
+                    <input type="hidden" name="ingredients" id="ingredients" value='<%- JSON.stringify(recipe.extendedIngredients) %>'>
+                    <button type="submit" id="servingsButton">Submit</button>
+                </div>
+            </h4>
+            <div id="ingredientsDiv">
+                <ul id="ingredientsList">
+                    <% for (const ingredient of recipe.extendedIngredients) { %>
+                        <li><%- ingredient.amount %> <%- ingredient.unit %> <%- ingredient.name %></li>
+                    <% } %>
+                </ul>
+            </div>
         
             <h2>Instructions: </h2>
             <ol>
@@ -49,9 +66,117 @@
             </ol>
         </div>
     </body>
-    
-
 </main>
 
+<script>
+    let servingsButton = document.querySelector('#servingsButton');
+    servingsButton.addEventListener("click", getData);
+
+    servingsButton.addEventListener("click", (event) => {
+        event.preventDefault(); // Prevents form submission
+        getData();
+    });
+
+    
+    function delay(ms)
+    {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function getData() 
+    {
+        console.log("Running getData() in the singleRecipe script....\n");
+
+        const ingredientsInput = document.querySelector('#ingredients');
+        const ingredients = ingredientsInput.value;
+        const ingredientsData = JSON.parse(ingredients);
+        //console.log(`ingredients: ${ingredients}\n`);
+
+        const desiredInput = document.querySelector('#desired');
+        const desiredServings = desiredInput.value;
+        console.log(`desiredServings: ${desiredServings}\n`);
 
 
+        const currentInput = document.querySelector('#current');
+        const currentServings = currentInput.value;
+        console.log(`currentServings: ${currentServings}\n`);
+
+        const recipeData = {
+            data: {
+                ingredients: ingredientsData,
+                currentServings: currentServings,
+                desiredServings: desiredServings
+            }
+        };
+        console.log(`Recipe Data: ${recipeData}\n`);
+
+        const url = `http://localhost:3004/adjustServings`;
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(recipeData) // Convert the JavaScript object to a JSON string
+        };
+
+        try {
+            const response = await fetch(url, options);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            console.log(response);
+
+            const results = await response.json();
+
+            const ingredientsDiv = document.getElementById("ingredientsDiv");
+            // ingredientsDiv.replaceChildren([]);
+            ingredientsDiv.innerHTML = '';  // Clear existing ingredients
+
+            for (const ingredient of results.data.ingredients)
+            {
+                await delay(1500);
+                console.log(`${ingredient.amount}, ${ingredient.unit}, ${ingredient.name}`);
+                let ingredientElement = createCard(ingredient);
+                ingredientsDiv.appendChild(ingredientElement);
+            }
+        } catch (error) {
+            console.error('Error making the request:', error);
+        }
+    }
+
+    function createCard(ingredientObj)
+    {
+        //Element that contains the card and insert in layout
+        let container = createElement('div', 'col-md-6');
+
+        let card = createElement('div', 'card h-100 d-flex justify-content-center align-items-center');
+        container.appendChild(card);
+
+        //name
+        let title = createElement('h2', 'card-title', ingredientObj.name);
+        card.append(title);
+
+        //amount
+        let amount = createElement('div', 'h4', 'Amount: ' + ingredientObj.amount);
+        card.appendChild(amount);
+
+        //unit
+        let unit = createElement('div', 'h4', 'Unit: ' + ingredientObj.unit);
+        card.appendChild(unit);
+        
+        return container;
+    }
+
+
+
+    function createElement(type, classes, data = null) {
+        let element = document.createElement(type);
+        element.className = classes;
+        if (data) {
+        element.innerHTML = data;
+        }
+        return element;
+    }
+</script>
