@@ -142,7 +142,7 @@ async function addMealForm(req, res, next) {
     res.render("addMealForm", { recipeID });
 }
 
-async function addMeal(req, res, next) {
+async function updateMealPlan(req, res, next) {
     const { date, userID, day, recipeID } = req.body;
 
     const mealData = {
@@ -183,4 +183,4 @@ async function addMeal(req, res, next) {
 }
 
 
-export { viewMealPlan, addMealForm, addMeal }
+export { viewMealPlan, addMealForm, updateMealPlan }

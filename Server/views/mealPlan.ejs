@@ -127,6 +127,15 @@
                                     <h5><%= mealPlan[day].title %></h5>
                                     <p>Servings: <%= mealPlan[day].servings %></p>
                                     <p>Ready in: <%= mealPlan[day].readyInMinutes %> minutes</p>
+                                    
+                                    <!-- Form to remove meal from the plan -->
+                                    <form method="POST" action="/mealPlans/updateMealPlan">
+                                        <input type="hidden" name="day" value="<%- day %>">
+                                        <input type="hidden" name="date" value="<%- dateToday %>">
+                                        <input type="hidden" name="userID" value="<%- userID %>">
+                                        <input type="hidden" name="recipeID" value="">
+                                        <button type="submit" class="btn btn-danger btn-sm">Remove from Meal Plan</button>
+                                    </form>
                                 </div>
                             </a>
                         <% } else { %>

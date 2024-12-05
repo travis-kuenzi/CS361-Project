@@ -6,6 +6,6 @@ const router = express.Router();
 router.get("/viewMealPlan/:userID/:date", mealPlanController.viewMealPlan);
 router.get("/addMealForm/:recipeID", mealPlanController.addMealForm);
 
-router.post("/addMeal", mealPlanController.addMeal);
+router.post("/updateMealPlan", mealPlanController.updateMealPlan);
 
 export default router;
