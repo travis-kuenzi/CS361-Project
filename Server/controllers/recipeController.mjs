@@ -79,6 +79,37 @@ async function addFavorite(req, res, next) {
     }
 }
 
+async function removeFavorite(req, res, next) {
+    console.log("Running removeFavorite...");
+
+    const favoriteID = req.params.favoriteID;
+    const userID = req.params.userID;
+
+    console.log(`Sent to microservice... favoriteID: ${favoriteID}`);
+
+    const url = `http://localhost:3003/removeFavorite/${favoriteID}`;
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const results = await response.json();
+
+        res.redirect(`/recipes/favorites/${userID}`);
+    } catch (error) {
+        console.error('Error making the request:', error);
+    }
+}
+
 async function getFavorites(req, res, next) {
 
     const userID = req.params.userID;
@@ -109,4 +140,4 @@ async function getFavorites(req, res, next) {
 }
 
 
-export { browseRecipes, recipeById, addFavorite, getFavorites };
+export { browseRecipes, recipeById, addFavorite, removeFavorite, getFavorites };

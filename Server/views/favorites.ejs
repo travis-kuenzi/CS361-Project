@@ -51,20 +51,24 @@
             <div class="row">
                 <% data.forEach(favorite => { %>
                     <div class="col-md-4 mb-4">
-                        <div class="favorite-card card shadow-sm">
-                            <img src="<%= favorite.recipeImage %>" alt="<%= favorite.recipeTitle %>" class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= favorite.recipeTitle %></h5>
-                                <p class="card-text">Servings: <%= favorite.recipeServings %></p>
-                                <p class="card-text">Ready in: <%= favorite.recipeReadyInMinutes %> minutes</p>
-                                <form method="POST" action="/favorites/remove/<%- favorite._id %>">
-                                    <button type="submit" class="btn btn-danger btn-sm">Remove from Favorites</button>
-                                </form>
+                        <!-- Add link around the card to make the whole card clickable -->
+                        <a href="/recipes/<%- favorite.recipeID %>" class="text-decoration-none">
+                            <div class="favorite-card card shadow-sm">
+                                <img src="<%= favorite.recipeImage %>" alt="<%= favorite.recipeTitle %>" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= favorite.recipeTitle %></h5>
+                                    <p class="card-text">Servings: <%= favorite.recipeServings %></p>
+                                    <p class="card-text">Ready in: <%= favorite.recipeReadyInMinutes %> minutes</p>
+                                    <form method="POST" action="/recipes/removeFavorite/<%- favorite._id %>/<%- userID %>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Remove from Favorites</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <% }) %>
             </div>
+        
         <% } else { %>
             <div class="alert alert-info" role="alert">
                 You have no favorite recipes yet.

@@ -91,12 +91,39 @@ async function verifyLogOut(req, res, next) {
 }
 
 async function userInformation(req, res, next) {
-    const userID = req.session.userID;
-    
-    res.send(userID);
+    console.log("running userInformation in the userController...\n");
 
-    if (!userID) {
-        return res.status(404).send("User ID not found in session.");
+    const { userID } = req.params;
+    console.log(`User ID passed by userInformation: ${userID}`);
+
+    const url = `http://localhost:3001/userInformation/${userID}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    console.log(`URL: ${url}\n`);
+
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        const { username } = data.userInfo;
+        console.log(username);
+
+        res.render('userInformation', { username });
+
+    } catch (error) {
+        console.error('Error making the request:', error);
+        res.redirect("/recipes");
     }
 }
 

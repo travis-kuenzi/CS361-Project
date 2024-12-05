@@ -8,6 +8,7 @@ router.get("/:id", recipeController.recipeById);
 
 router.get("/favorites/:userID", recipeController.getFavorites);
 router.post("/addFavorite", recipeController.addFavorite);
+router.post("/removeFavorite/:favoriteID/:userID", recipeController.removeFavorite);
 
 
 export default router;

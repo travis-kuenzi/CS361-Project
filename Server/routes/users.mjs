@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", userController.loginForm);
 router.get("/signup", userController.signupForm);
 
-router.get("/userInformation", userController.userInformation);
+router.get("/userInformation/:userID", userController.userInformation);
 router.get("/logOutVerify", userController.verifyLogOut);
 
 
